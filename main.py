@@ -2,7 +2,9 @@ import colorama
 from colorama import Fore, Back, Style
 import random
 import pathlib 
-
+from time import sleep
+import asyncio
+import threading
 
 colorama.init()
 VERSION = '0.0.1'
@@ -14,9 +16,15 @@ def main():
     cprint('#' * 28, Fore.YELLOW)
     cprint('   ' + 'notesync version '+ VERSION, Fore.YELLOW)
     cprint('#' * 28, Fore.YELLOW)
-    cprint('**WARNING** Webcam scan did not detect any trans or trans-adjacent pride flags in frame, '\
-        'program functionality will be limited until your ally status is confirmed.', Fore.RED)
-    if random.random() <= .43: print(' ' * random.randint(8, 65) + 'ACK!')
+    meme()
+
+def meme():
+    def _(delay: float):
+        sleep(delay)
+        cprint('**WARNING** Webcam scan did not detect any trans or trans-adjacent pride flags in frame, '\
+            'program functionality will be limited until your ally status is confirmed.', Fore.RED)
+    threading.Thread(target=_, args=((.5 + random.random()) * 4,)).start()
+
 
 def cprint(string:str, col):
     print(col + string + Fore.WHITE)
