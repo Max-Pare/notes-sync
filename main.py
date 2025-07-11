@@ -15,11 +15,15 @@ repo_path = ''
 
 
 def main():
+    startup_message()
+    check_depenencies()
+
+
+def startup_message():
     cprint('#' * 28, Fore.YELLOW)
     cprint('   ' + 'notesync version '+ VERSION, Fore.YELLOW)
     cprint('#' * 28, Fore.YELLOW)
     meme()
-    init()
 
 def meme():
     def _(delay: float):
@@ -41,7 +45,7 @@ def check_depenencies():
             cprint(str(e), Fore.YELLOW)
             continue
     if not GIT_BIN:
-        cprint("GIT isn't installed or I failed to find it, if it's the latter then tough luck.", Fore.RED)
+        cprint("GIT isn't installed or I failed to find it, if it's the latter then open an issue or fix it yourself!!!", Fore.RED)
         exit(-1)    
 
 
@@ -49,10 +53,10 @@ def cprint(string:str, col=Fore.WHITE):
     print(col + string + Style.RESET_ALL)
 
 def prompt_repo_path() -> tuple[bool, pathlib.Path]:
-    data = input('Enter complete repo path (e.g.: /home/notes/dirt shopping list/): ')
-    if len(data) > 1024:
-        # probably a good idea
-        cprint('Path too long', Fore.RED)
+    while True:
+        data = input('Enter complete repo path (e.g.: /home/notes/dirt shopping list/): ')
+        if len(data) > 1024: cprint('Path too long', Fore.RED) # probably a good idea
+        break
     try:
         _p = pathlib.Path(data)
     except Exception as e:
@@ -70,18 +74,13 @@ def validate_dir(_path):
 def prompt_yn(message:str):
     return input(message).strip().lower() in ('y', 'yes')
 
-def init():
-    check_depenencies()
+def check_repo():
     if repo_path:
         if not os.path.isdir(repo_path) and not os.path.isfile(repo_path):
             cprint(f'The cached repo no longer exists at path "{repo_path}", create a new one or specify the new path of the repo.', Fore.RED)
             cprint('TODO: implement this', Fore.GREEN)
         return
     repo_path = prompt_repo_path()
-
-
-
-
 
 if __name__ == '__main__':
     main()
